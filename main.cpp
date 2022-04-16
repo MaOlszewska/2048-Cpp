@@ -1,20 +1,13 @@
-
 #include <wx/wxprec.h>
-
-#ifndef WX_PRECOMP
 #include <wx/wx.h>
 #include "GameWindow.h"
 
-
-
-#endif
-
-class App_2048 : public wxApp
-{
+class App_2048 : public wxApp{
 private:
-    GameWindow *window;
+    GameWindow *window{};
+
 public:
-    virtual bool OnInit(){
+    bool OnInit() override{
         window = new GameWindow();
         window->setUp();
         return true;

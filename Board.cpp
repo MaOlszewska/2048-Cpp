@@ -23,7 +23,7 @@ bool Board::checkIsEmpty() {
     return false;
 }
 
-wxColour Board::GetCellColour(int row, int col) {
+wxColour Board::getCellColour(int row, int col) {
     switch (cells[row][col]) {
         case 0:
             return tilesColour[0];
@@ -47,14 +47,16 @@ wxColour Board::GetCellColour(int row, int col) {
             return tilesColour[9];
         case 1024:
             return tilesColour[10];
+        default:
+            return tilesColour[0];
     }
 }
 
 void Board::drawCells(wxBufferedPaintDC &dc) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            wxRect rect(i * 120, j * 120+20, 120, 120);
-            dc.SetBrush(GetCellColour(i, j));
+            wxRect rect(i * 120, j * 120 + 20, 120, 120);
+            dc.SetBrush(getCellColour(i, j));
             dc.DrawRoundedRectangle(rect, 10.0);
 
             wxString number;
@@ -65,99 +67,18 @@ void Board::drawCells(wxBufferedPaintDC &dc) {
     }
 }
 
-void Board::Surprise(wxBufferedPaintDC &dc) {
+void Board::surprise(wxBufferedPaintDC &dc) {
     wxInitAllImageHandlers();
     wxImage img;
-    img.LoadFile("pobrane.jpg");
-    wxFrame* frame  = new wxFrame(NULL, wxID_ANY, "Surprise! You are a winner! ");
-    wxStaticBitmap* bitmap = new wxStaticBitmap(frame, wxID_ANY, wxBitmap(img));
+    img.LoadFile("surprise.jpg");
+    auto* frame  = new wxFrame(NULL, wxID_ANY, "You are a winner! ");
+    auto* bitmap = new wxStaticBitmap(frame, wxID_ANY, wxBitmap(img));
     frame ->Show();
-}
-void Board::move(int number) {
-    int counter = 0;
-    if (number == 0){
-
-        for (int i = 0; i < 4; i++) {
-            int currentX = i;
-            for (int j = 3 ; j > 0; j--) {
-                int currentY = j;
-                int nextY = j - 1;
-                if(cells[currentY][currentX] == cells[nextY][currentX]){
-                    cells[nextY][currentX] += cells[currentY][currentX];
-                    counter += cells[nextY][currentX];
-                    cells[currentY][currentX] = 0;
-                }
-                else if(cells[nextY][currentX] == 0){
-                    cells[nextY][currentX] = cells[currentY][currentX];
-                    cells[currentY][currentX] = 0;
-                }
-            }
-        }
-    }
-    else if(number == 1){
-        for (int i = 0; i < 4 ; i++) {
-            int currentX = i;
-            for (int j = 0 ; j < 3; j++) {
-                int currentY = j;
-                int nextY = j + 1;
-                if(cells[currentY][currentX] == cells[nextY][currentX]){
-                    cells[nextY][currentX] += cells[currentY][currentX];
-                    counter += cells[nextY][currentX];
-                    cells[currentY][currentX] = 0;
-                }
-                else if(cells[nextY][currentX] == 0){
-                    cells[nextY][currentX] = cells[currentY][currentX];
-                    cells[currentY][currentX] = 0;
-                }
-            }
-        }
-    }
-    else if(number == 2){
-        for (int i = 3; i > 0 ; i--) {
-            int currentX = i;
-            int nextX = i - 1;
-            for (int j = 3 ; j >= 0; j--) {
-                int currentY = j;
-                if(cells[currentY][currentX] == cells[currentY][nextX]){
-                    cells[currentY][nextX] += cells[currentY][currentX];
-                    counter += cells[currentY][nextX];
-                    cells[currentY][currentX] = 0;
-                }
-                else if(cells[currentY][nextX] == 0){
-                    cells[currentY][nextX] = cells[currentY][currentX];
-                    cells[currentY][currentX] = 0;
-                }
-            }
-        }
-    }
-    else if(number == 3){
-        for (int i = 0; i < 3 ; i++) {
-            int currentX = i;
-            int nextX = i + 1;
-            for (int j = 0 ; j < 4; j++) {
-                int currentY = j;
-                if(cells[currentY][currentX] == cells[currentY][nextX]){
-                    cells[currentY][nextX] += cells[currentY][currentX];
-                    counter += cells[currentY][nextX];
-                    cells[currentY][currentX] = 0;
-                }
-                else if(cells[currentY][nextX] == 0){
-                    cells[currentY][nextX] = cells[currentY][currentX];
-                    cells[currentY][currentX] = 0;
-                }
-            }
-        }
-    }
-    this->currentScore += counter;
-
-    if(this->currentScore  >this -> highestScore){
-        this->highestScore = this->currentScore;
-    }
 }
 
 bool Board::add() {
     if(checkIsEmpty()){
-        int random = rand() % 100;
+        int random = rand() % 10;
         int added = 0;
         while(added < 100){
             int x = rand() % 4;
@@ -175,9 +96,10 @@ bool Board::add() {
         }
         return false;
     }
+    return false;
 }
 
-void Board::Restart() {
+void Board::restart() {
     for(int i = 0; i < 4; i++){
         for(int j = 0 ; j < 4; j++){
             cells[i][j] = 0;
@@ -185,7 +107,7 @@ void Board::Restart() {
     }
 }
 
-bool Board::ifWin(){
+bool Board::checkWin(){
     for(int i = 0; i < 4; i++){
         for(int j = 0 ; j < 4; j++){
             if(cells[i][j] == 2048){
@@ -195,3 +117,94 @@ bool Board::ifWin(){
     }
     return false;
 }
+
+void Board::moveUp() {
+    int counter = 0;
+    for (int i = 3; i > 0 ; i--) {
+        int currentX = i;
+        int nextX = i - 1;
+        for (int j = 3 ; j >= 0; j--) {
+            int currentY = j;
+            if(cells[currentY][currentX] == cells[currentY][nextX]){
+                cells[currentY][nextX] += cells[currentY][currentX];
+                counter += cells[currentY][nextX];
+                cells[currentY][currentX] = 0;
+            }
+            else if(cells[currentY][nextX] == 0){
+                cells[currentY][nextX] = cells[currentY][currentX];
+                cells[currentY][currentX] = 0;
+            }
+        }
+    }
+    checkScore(counter);
+}
+
+void Board::moveDown() {
+    int counter = 0;
+    for (int i = 0; i < 3 ; i++) {
+        int currentX = i;
+        int nextX = i + 1;
+        for (int j = 0 ; j < 4; j++) {
+            int currentY = j;
+            if(cells[currentY][currentX] == cells[currentY][nextX]){
+                cells[currentY][nextX] += cells[currentY][currentX];
+                counter += cells[currentY][nextX];
+                cells[currentY][currentX] = 0;
+            }
+            else if(cells[currentY][nextX] == 0){
+                cells[currentY][nextX] = cells[currentY][currentX];
+                cells[currentY][currentX] = 0;
+            }
+        }
+    }
+    checkScore(counter);
+}
+
+void Board::moveLeft() {
+    int counter = 0;
+    for (int i = 0; i < 4; i++) {
+        int currentX = i;
+        for (int j = 3 ; j > 0; j--) {
+            int currentY = j;
+            int nextY = j - 1;
+            if(cells[currentY][currentX] == cells[nextY][currentX]){
+                cells[nextY][currentX] += cells[currentY][currentX];
+                counter += cells[nextY][currentX];
+                cells[currentY][currentX] = 0;
+            }
+            else if(cells[nextY][currentX] == 0){
+                cells[nextY][currentX] = cells[currentY][currentX];
+                cells[currentY][currentX] = 0;
+            }
+        }
+    }
+    checkScore(counter);
+}
+
+void Board::moveRight() {
+    int counter = 0;
+    for (int i = 0; i < 4 ; i++) {
+        int currentX = i;
+        for (int j = 0 ; j < 3; j++) {
+            int currentY = j;
+            int nextY = j + 1;
+            if(cells[currentY][currentX] == cells[nextY][currentX]){
+                cells[nextY][currentX] += cells[currentY][currentX];
+                counter += cells[nextY][currentX];
+                cells[currentY][currentX] = 0;
+            }
+            else if(cells[nextY][currentX] == 0){
+                cells[nextY][currentX] = cells[currentY][currentX];
+                cells[currentY][currentX] = 0;
+            }
+        }
+    }
+    checkScore(counter);
+}
+
+void Board::checkScore(int current) {
+    currentScore += current;
+    if(currentScore  > highestScore){ highestScore = currentScore;}
+}
+
+
