@@ -1,12 +1,14 @@
 # 2048 
-This is a clone of the popular 2048 game.
-The rules of the game are simple. The goal is to get a score of 2048 by moving the blocks vertically or horizontally. 
-After making a move, a new brick 2 or 4 will appear on the board.
-
-# Screenshot of the game
+Jest to klon popularnej gry 2048.
+Zasady tej gry są proste. Aby wygrać należe uzyskac wynik 2048 przez poruszanie klockami.
+Można sie poruszać w góre, dół, prawo i lewo strzałkami, które znajdują się nad planszą.
+Klocki łączą się ze sobą kiedy maja takie same wartości i powstaje z nich klocek, który jest ich sumą.
+Po każdym wykonanym ruchu na planszy w losowym wolnym miejscu pojawia się klocek z wartością 2 lub 4.
+Kiedy plansza jest wypełniona i nie ma możliowści wykonania ruchu gra się kończy :worried:.  
+# Screenshot z gry
 
 <img src="2048.png"/>
 
-If you  reach the score of 2048 you will see a surprise :cat:
+Jeśli uda Ci się osiągnąć wynik 2048 czeka Cię niespodzianka :cat:
 
-## Have fun! :sparkles:
+## Dobrej Zabawy! :sparkles:
