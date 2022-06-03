@@ -8,7 +8,6 @@ Klocki łączą się ze sobą kiedy maja takie same wartości i powstaje z nich 
 Po każdym wykonanym ruchu na planszy w losowym wolnym miejscu pojawia się klocek z wartością 2 lub 4.
 Kiedy plansza jest wypełniona i nie ma możliowści wykonania ruchu gra się kończy :worried:.  
 Rozgrywkę w każdej chwili można zrestartować, przy czym najlepszy wyniki osiągnięty zapisuje się.
-git 
 
 # Screenshot z gry
 #####  Do wizualizacji gry została uzyta biblioteka wxWidgets
